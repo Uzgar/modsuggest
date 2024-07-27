@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #f7f7f7, #ffffff);
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        .mod-tile {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            padding: 20px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .mod-tile:hover {
+            transform: scale(1.02);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .mod-tile h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+        .mod-tile a {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .mod-tile a:hover {
+            text-decoration: underline;
+        }
+        .admin-actions {
+            margin-bottom: 20px;
+        }
+        .admin-actions form {
+            display: inline;
+            margin-right: 10px;
+        }
+        .admin-actions button {
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .admin-actions .accept-button {
+            background-color: #28a745;
+        }
+        .admin-actions .accept-button:hover {
+            background-color: #218838;
+        }
+        .admin-actions .reject-button {
+            background-color: #dc3545;
+        }
+        .admin-actions .reject-button:hover {
+            background-color: #c82333;
+        }
+        .admin-actions .delete-button {
+            background-color: #ffc107;
+        }
+        .admin-actions .delete-button:hover {
+            background-color: #e0a800;
+        }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            color: #007bff;
+            transition: color 0.3s ease;
+        }
+        .back-button:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a class="back-button" href="/">&#8592; Back</a>
+        <h2>Admin Dashboard</h2>
+        <div>
+            <h3>Pending Mods</h3>
+            {% for mod in pending %}
+                <div class="mod-tile">
+                    <h3>{{ mod.name }}</h3>
+                    <a href="{{ mod.link }}" target="_blank">{{ mod.link }}</a>
+                    <div class="admin-actions">
+                        <form method="POST" action="{{ url_for('admin') }}">
+                            <input type="hidden" name="action" value="accept">
+                            <input type="hidden" name="mod_index" value="{{ loop.index0 }}">
+                            <button class="accept-button" type="submit">Accept</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('admin') }}">
+                            <input type="hidden" name="action" value="reject">
+                            <input type="hidden" name="mod_index" value="{{ loop.index0 }}">
+                            <button class="reject-button" type="submit">Reject</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div>
+            <h3>Accepted Mods</h3>
+            {% for mod in accepted %}
+                <div class="mod-tile">
+                    <h3>{{ mod.name }}</h3>
+                    <a href="{{ mod.link }}" target="_blank">{{ mod.link }}</a>
+                    <div class="admin-actions">
+                        <form method="POST" action="{{ url_for('admin') }}">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="mod_index" value="{{ loop.index0 }}">
+                            <button class="delete-button" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
